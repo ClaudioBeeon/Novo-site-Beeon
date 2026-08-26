@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Nohemi — fonte de display da marca Beeon, self-hosted.
+------------------------------------------------------------------ */
+
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-ExtraLight.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-ExtraBold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nohemi";
+  src: url("/fonts/nohemi/Nohemi-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------
+   Beeon — sistema de design
+
+   Fundação: escala fluida em rem. A raiz do documento acompanha a
+   largura da viewport (0.667vw, como no vucko.co), com clamp() para
+   não distorcer em telas muito estreitas ou ultrawide. Nunca usar px
+   em tipografia ou espaçamento — sempre rem, para que a composição
+   inteira escale proporcionalmente.
+------------------------------------------------------------------ */
+
+html {
+  font-size: clamp(8px, 0.667vw, 12px);
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: clamp(7.5px, 2.2vw, 9.5px);
+  }
+}
+
+:root {
+  /* marca */
+  --ink: #0a0a0a;
+  --paper: #ffffff;
+  --ground: #f4f6fa;
+  --azul: #0000fb;
+  --azul-dim: #2b2bfc;
+  --sinal: #ffc400;
+  --erro: #c1121f;
+  --muted: #6b7583;
+  --rule: #e4e8ef;
+  --rule-soft: #edf0f5;
+
+  /* tipografia */
+  --f-display: "Nohemi", var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-mono: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* compensação de largura da scrollbar quando o menu trava o scroll */
+  --sbw: 0px;
+
+  /* grid */
+  --gap: 2.4rem;
+  --pad: 5.8rem;
+  --section-gap: 16rem;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --pad: 2.4rem;
+    --gap: 1.6rem;
+    --section-gap: 10rem;
+  }
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-ground: var(--ground);
+  --color-azul: var(--azul);
+  --color-azul-dim: var(--azul-dim);
+  --color-sinal: var(--sinal);
+  --color-erro: var(--erro);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --font-display: var(--f-display);
+  --font-mono: var(--f-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--azul);
+  color: var(--paper);
+}
+
+::-webkit-scrollbar {
+  width: 0.9rem;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border: 0.2rem solid var(--paper);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--azul);
+}
+html {
+  scrollbar-color: var(--rule) var(--paper);
+}
+
+@layer base {
+  a {
+    color: inherit;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Utilitários de grid — 12 colunas, mesma mecânica do vucko.co
+------------------------------------------------------------------ */
+
+@layer utilities {
+  .site-max {
+    width: 100%;
+    max-width: 160rem;
+    margin-inline: auto;
+    padding-inline: var(--pad);
+  }
+
+  .site-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--gap);
+  }
+}
+
+/* linha reveal usada pelo motion de scroll (texto cinza -> preto) */
+.reveal-line {
+  color: var(--muted);
+  transition: color 0.6s ease;
+}
+.reveal-line.is-in {
+  color: var(--ink);
+}
+
+.reveal-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em);
+  will-change: transform, opacity;
+}
