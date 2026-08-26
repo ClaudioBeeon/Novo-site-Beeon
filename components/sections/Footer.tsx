@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { footer, site } from "@/lib/content";
+import { footer } from "@/lib/content";
 
 export default function Footer() {
   return (
