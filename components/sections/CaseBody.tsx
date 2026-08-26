@@ -2,7 +2,16 @@ import Link from "next/link";
 import { cases } from "@/lib/content";
 import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
-type CaseItem = (typeof cases)[number];
+type Resultado = { label: string; valor: string };
+type Depoimento = { texto: string; nome: string; cargo: string };
+
+// `resultados`/`depoimento` don't exist on any entry in `lib/content.ts` yet —
+// declared here as optional so the "in" narrowing below type-checks today and
+// lights up automatically once real data is added to a case.
+type CaseItem = (typeof cases)[number] & {
+  resultados?: readonly Resultado[];
+  depoimento?: Depoimento;
+};
 
 const AVATAR_COR = "#0000FB";
 
