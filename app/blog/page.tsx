@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <>
-      <Header />
+      <Header comHero={false} />
       <main style={{ marginTop: "8rem" }}>
         <BlogEditorial />
       </main>

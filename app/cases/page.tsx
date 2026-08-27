@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function CasesPage() {
   return (
     <>
-      <Header />
+      <Header comHero={false} />
       <main>
         <section className="site-max" style={{ marginTop: "16rem", maxWidth: "124rem" }}>
           <RevealOnScroll className="mb-[5rem] block">
