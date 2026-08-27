@@ -7,14 +7,15 @@ import RevealOnScroll from "@/components/motion/RevealOnScroll";
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
  * Cada vídeo fica sempre montado (nada de remontar, então o playback
- * não reinicia). Um vídeo, uma vez mostrado, nunca mais encolhe de
- * volta — ele fica cobrindo o quadro inteiro pra sempre, e o próximo
- * cresce por cima dele (scaleY a partir da base, empilhado por
- * z-index de "mais recente por cima"). Assim sempre existe vídeo
- * embaixo cobrindo 100% do quadro durante a transição, nunca o fundo
- * escuro do contêiner — dois vídeos encolhendo/crescendo ao mesmo
- * tempo a partir do mesmo ponto nunca "se encontram" no meio, o que
- * deixava uma fresta visível.
+ * não reinicia). A revelação usa clip-path (não transform/scale) —
+ * scale distorce o próprio conteúdo do vídeo enquanto anima (espreme
+ * texto e logo verticalmente); clip-path só mascara, revela sem
+ * nunca deformar a imagem. Um vídeo, uma vez mostrado, nunca mais
+ * fecha — fica cobrindo o quadro inteiro pra sempre, e o próximo
+ * revela por cima dele (empilhado por z-index de "mais recente por
+ * cima"), crescendo de baixo pra cima. Assim sempre existe vídeo sem
+ * distorção cobrindo 100% do quadro durante a transição, nunca o
+ * fundo escuro do contêiner.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
@@ -39,12 +40,11 @@ export default function Showcase() {
             {servicos.map((s, i) => (
               <div
                 key={s.slug}
-                className="absolute inset-0 origin-bottom"
+                className="absolute inset-0"
                 style={{
-                  transform: mostrados[i] ? "scaleY(1)" : "scaleY(0)",
-                  opacity: mostrados[i] ? 1 : 0,
+                  clipPath: mostrados[i] ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
                   zIndex: zIndices[i],
-                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transition: "clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
                 <video
