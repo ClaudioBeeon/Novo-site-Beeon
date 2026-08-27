@@ -6,12 +6,12 @@ import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
- * Mecânica de transição medida no vucko.co via Playwright — cada vídeo
- * fica sempre montado (nada de remontar, então o playback não reinicia),
- * empilhado com transform-origin na base: o item ativo assenta em
- * translateY(0) scale(1), os inativos ficam "estacionados" embaixo,
- * encolhidos (translateY(100%) scale(0.75), opacity 0) — trocar de
- * serviço faz o novo vídeo subir deslizando enquanto cresce.
+ * Cada vídeo fica sempre montado (nada de remontar, então o playback
+ * não reinicia), empilhado com transform-origin na base. A troca usa
+ * só escala (sem translateY): o ativo é scale(1), os inativos
+ * scale(0) — como os dois ficam ancorados na mesma base, nunca existe
+ * um vão descoberto revelando o fundo do contêiner por trás, e o vídeo
+ * ativo visivelmente cresce de baixo pra cima até preencher o quadro.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
@@ -27,10 +27,10 @@ export default function Showcase() {
                 key={s.slug}
                 className="absolute inset-0 origin-bottom"
                 style={{
-                  transform: active === i ? "translateY(0) scale(1)" : "translateY(100%) scale(0.75)",
+                  transform: active === i ? "scale(1)" : "scale(0)",
                   opacity: active === i ? 1 : 0,
                   zIndex: active === i ? 1 : 0,
-                  transition: "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease",
+                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
                 }}
               >
                 <video
