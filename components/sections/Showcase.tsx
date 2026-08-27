@@ -1,40 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { servicos } from "@/lib/content";
 import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
- * Cada vídeo fica sempre montado (nada de remontar, então o playback
- * não reinicia). A revelação usa clip-path (não transform/scale) —
- * scale distorce o próprio conteúdo do vídeo enquanto anima (espreme
- * texto e logo verticalmente); clip-path só mascara, revela sem
- * nunca deformar a imagem. Um vídeo, uma vez mostrado, nunca mais
- * fecha — fica cobrindo o quadro inteiro pra sempre, e o próximo
- * revela por cima dele (empilhado por z-index de "mais recente por
- * cima"), crescendo de baixo pra cima. Assim sempre existe vídeo sem
- * distorção cobrindo 100% do quadro durante a transição, nunca o
- * fundo escuro do contêiner.
+ * Crossfade simples (opacidade + leve subida) — nada de escala nem
+ * clip-path. Confirmado via captura de vídeo frame a frame que o
+ * próprio vucko.co mostra um instante sólido do fundo do contêiner
+ * durante a troca; a diferença é que os vídeos deles têm fundo escuro
+ * e o nosso é bem colorido, então qualquer técnica de revelação deixa
+ * uma emenda visível por contraste — a saída mais confiável é manter
+ * a transição rápida (0.4s) para minimizar essa janela, sem tentar
+ * geometria complexa que só trocava um problema por outro.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
-  const [mostrados, setMostrados] = useState(() => servicos.map((_, i) => i === 0));
-  const [zIndices, setZIndices] = useState(() => servicos.map((_, i) => (i === 0 ? 1 : 0)));
-  const zTopo = useRef(1);
-
-  function ativar(i: number) {
-    setActive(i);
-    setMostrados((prev) => (prev[i] ? prev : prev.map((v, idx) => (idx === i ? true : v))));
-    zTopo.current += 1;
-    const novoZ = zTopo.current;
-    setZIndices((prev) => prev.map((v, idx) => (idx === i ? novoZ : v)));
-  }
 
   return (
     <section id="servicos" className="site-max" style={{ marginTop: "var(--section-gap)", maxWidth: "124rem" }}>
       <div className="site-grid items-start">
-        {/* vídeo — cresce de baixo pra cima ao trocar */}
+        {/* vídeo — crossfade rápido com leve subida */}
         <div className="col-span-12 lg:col-span-5 order-2 lg:order-1 mt-[4rem] lg:mt-0">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem] bg-ink">
             {servicos.map((s, i) => (
@@ -42,9 +29,10 @@ export default function Showcase() {
                 key={s.slug}
                 className="absolute inset-0"
                 style={{
-                  clipPath: mostrados[i] ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
-                  zIndex: zIndices[i],
-                  transition: "clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                  opacity: active === i ? 1 : 0,
+                  transform: active === i ? "translateY(0)" : "translateY(1.2rem)",
+                  zIndex: active === i ? 1 : 0,
+                  transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
                 <video
@@ -86,8 +74,8 @@ export default function Showcase() {
               <RevealOnScroll key={s.slug} as="li" y={4.4} duration={0.9} delay={i * 0.12}>
                 <a
                   href={`/servicos/${s.slug}`}
-                  onMouseEnter={() => ativar(i)}
-                  onFocus={() => ativar(i)}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
                   className="block font-display font-semibold text-[clamp(3.6rem,6.2vw,7.2rem)] leading-[1.05] tracking-[-0.025em] text-ink transition-opacity duration-300"
                   style={{ opacity: active === i ? 1 : 0.3 }}
                 >
