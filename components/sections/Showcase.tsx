@@ -38,10 +38,10 @@ export default function Showcase() {
               return (
                 <div
                   key={s.slug}
-                  className="absolute inset-0"
+                  className="absolute inset-0 overflow-hidden rounded-[1rem]"
                   style={{
                     transform: `translateY(${ehAtivo || ehAnterior ? "0" : "100%"}) scale(${
-                      ehAtivo ? 1 : 0.86
+                      ehAnterior ? 0.86 : 1
                     })`,
                     transformOrigin: "50% 100%",
                     zIndex: ehAtivo ? 2 : ehAnterior ? 1 : 0,
