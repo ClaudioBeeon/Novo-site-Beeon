@@ -1,32 +1,29 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { servicos } from "@/lib/content";
 import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
  * Animação especificada com referência ao After Effects: o vídeo que
- * entra só sobe em Y (sem fade, sem opacidade) — ele sobe de baixo do
- * quadro até a posição final. O vídeo que sai não desaparece: ele só
- * encolhe (scale), com o anchor point centralizado e embaixo, então
- * diminui de tamanho ancorado na base enquanto o novo sobe por cima
- * dele. Cada vídeo, uma vez revelado, nunca mais desce — fica em pé
- * (translateY 0) pra sempre; só alterna entre scale(1) quando ativo e
- * scale(0.86) quando não é mais o ativo.
+ * entra só sobe em Y (sem fade, sem opacidade) — sobe de baixo do
+ * quadro até a posição final. O vídeo que acabou de sair não
+ * desaparece: só encolhe (scale), anchor point centralizado embaixo,
+ * diminuindo de tamanho enquanto o novo sobe por cima dele. Só o
+ * ativo e o anterior-imediato participam disso — os outros dois
+ * ficam sempre estacionados embaixo (translateY 100%), prontos pra
+ * subir na próxima vez que forem escolhidos, então a subida acontece
+ * toda vez, não só na primeira.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
-  const [mostrados, setMostrados] = useState(() => servicos.map((_, i) => i === 0));
-  const [zIndices, setZIndices] = useState(() => servicos.map((_, i) => (i === 0 ? 1 : 0)));
-  const zTopo = useRef(1);
+  const [anterior, setAnterior] = useState<number | null>(null);
 
   function ativar(i: number) {
+    if (i === active) return;
+    setAnterior(active);
     setActive(i);
-    setMostrados((prev) => (prev[i] ? prev : prev.map((v, idx) => (idx === i ? true : v))));
-    zTopo.current += 1;
-    const novoZ = zTopo.current;
-    setZIndices((prev) => prev.map((v, idx) => (idx === i ? novoZ : v)));
   }
 
   return (
@@ -34,30 +31,35 @@ export default function Showcase() {
       <div className="site-grid items-start">
         {/* vídeo — entra subindo em Y, o anterior só encolhe */}
         <div className="col-span-12 lg:col-span-5 order-2 lg:order-1 mt-[4rem] lg:mt-0">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem] bg-ink">
-            {servicos.map((s, i) => (
-              <div
-                key={s.slug}
-                className="absolute inset-0"
-                style={{
-                  transform: `translateY(${mostrados[i] ? "0" : "100%"}) scale(${active === i ? 1 : 0.86})`,
-                  transformOrigin: "50% 100%",
-                  zIndex: zIndices[i],
-                  transition:
-                    "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-                }}
-              >
-                <video
-                  className="h-full w-full object-cover"
-                  src={s.video}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            ))}
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem] bg-ground">
+            {servicos.map((s, i) => {
+              const ehAtivo = i === active;
+              const ehAnterior = i === anterior;
+              return (
+                <div
+                  key={s.slug}
+                  className="absolute inset-0"
+                  style={{
+                    transform: `translateY(${ehAtivo || ehAnterior ? "0" : "100%"}) scale(${
+                      ehAtivo ? 1 : 0.86
+                    })`,
+                    transformOrigin: "50% 100%",
+                    zIndex: ehAtivo ? 2 : ehAnterior ? 1 : 0,
+                    transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                >
+                  <video
+                    className="h-full w-full object-cover"
+                    src={s.video}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className="relative mt-[1.6rem] min-h-[3.6rem]">
