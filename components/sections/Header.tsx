@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { nav, site } from "@/lib/content";
+import { hrefEmContexto } from "@/lib/nav";
 import MenuOverlay from "./MenuOverlay";
 
 export default function Header({ comHero = true }: { comHero?: boolean } = {}) {
   const [overHero, setOverHero] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!comHero) return;
@@ -55,7 +58,7 @@ export default function Header({ comHero = true }: { comHero?: boolean } = {}) {
             {nav.slice(1).map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={hrefEmContexto(item.href, pathname)}
                 className="rounded-full px-[1.6rem] py-[0.9rem] font-mono text-[1.2rem] text-ink hover:bg-ground transition-colors"
               >
                 {item.label}
@@ -65,7 +68,7 @@ export default function Header({ comHero = true }: { comHero?: boolean } = {}) {
 
           <div className="flex items-center gap-[1rem] shrink-0 justify-self-end">
             <a
-              href={site.ctaHref}
+              href={hrefEmContexto(site.ctaHref, pathname)}
               className="hidden sm:inline-flex rounded-full bg-paper px-[2rem] py-[1.1rem] font-mono text-[1.2rem] font-medium text-ink shadow-[0_0.4rem_1.6rem_rgba(10,10,10,0.12)] hover:bg-ground transition-colors"
             >
               {site.headerCta}

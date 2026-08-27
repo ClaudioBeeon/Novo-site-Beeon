@@ -29,7 +29,7 @@ export default function CaseHero({ caso }: { caso: CaseItem }) {
 
         <div className="relative z-10 flex h-full w-full flex-col justify-between p-[2.4rem] sm:p-[4rem]">
           <Link
-            href="/#cases"
+            href="/cases"
             className="inline-flex w-fit items-center gap-[0.8rem] rounded-full bg-paper/15 backdrop-blur px-[1.6rem] py-[0.9rem] font-mono text-[1.2rem] text-paper hover:bg-paper/25 transition-colors"
           >
             ← Voltar para cases
