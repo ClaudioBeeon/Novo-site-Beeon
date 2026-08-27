@@ -1,20 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { servicos } from "@/lib/content";
 import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
  * Cada vídeo fica sempre montado (nada de remontar, então o playback
- * não reinicia), empilhado com transform-origin na base. A troca usa
- * só escala (sem translateY): o ativo é scale(1), os inativos
- * scale(0) — como os dois ficam ancorados na mesma base, nunca existe
- * um vão descoberto revelando o fundo do contêiner por trás, e o vídeo
- * ativo visivelmente cresce de baixo pra cima até preencher o quadro.
+ * não reinicia). Um vídeo, uma vez mostrado, nunca mais encolhe de
+ * volta — ele fica cobrindo o quadro inteiro pra sempre, e o próximo
+ * cresce por cima dele (scaleY a partir da base, empilhado por
+ * z-index de "mais recente por cima"). Assim sempre existe vídeo
+ * embaixo cobrindo 100% do quadro durante a transição, nunca o fundo
+ * escuro do contêiner — dois vídeos encolhendo/crescendo ao mesmo
+ * tempo a partir do mesmo ponto nunca "se encontram" no meio, o que
+ * deixava uma fresta visível.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
+  const [mostrados, setMostrados] = useState(() => servicos.map((_, i) => i === 0));
+  const [zIndices, setZIndices] = useState(() => servicos.map((_, i) => (i === 0 ? 1 : 0)));
+  const zTopo = useRef(1);
+
+  function ativar(i: number) {
+    setActive(i);
+    setMostrados((prev) => (prev[i] ? prev : prev.map((v, idx) => (idx === i ? true : v))));
+    zTopo.current += 1;
+    const novoZ = zTopo.current;
+    setZIndices((prev) => prev.map((v, idx) => (idx === i ? novoZ : v)));
+  }
 
   return (
     <section id="servicos" className="site-max" style={{ marginTop: "var(--section-gap)", maxWidth: "124rem" }}>
@@ -27,10 +41,10 @@ export default function Showcase() {
                 key={s.slug}
                 className="absolute inset-0 origin-bottom"
                 style={{
-                  transform: active === i ? "scale(1)" : "scale(0)",
-                  opacity: active === i ? 1 : 0,
-                  zIndex: active === i ? 1 : 0,
-                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
+                  transform: mostrados[i] ? "scaleY(1)" : "scaleY(0)",
+                  opacity: mostrados[i] ? 1 : 0,
+                  zIndex: zIndices[i],
+                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
                 <video
@@ -72,8 +86,8 @@ export default function Showcase() {
               <RevealOnScroll key={s.slug} as="li" y={4.4} duration={0.9} delay={i * 0.12}>
                 <a
                   href={`/servicos/${s.slug}`}
-                  onMouseEnter={() => setActive(i)}
-                  onFocus={() => setActive(i)}
+                  onMouseEnter={() => ativar(i)}
+                  onFocus={() => ativar(i)}
                   className="block font-display font-semibold text-[clamp(3.6rem,6.2vw,7.2rem)] leading-[1.05] tracking-[-0.025em] text-ink transition-opacity duration-300"
                   style={{ opacity: active === i ? 1 : 0.3 }}
                 >
