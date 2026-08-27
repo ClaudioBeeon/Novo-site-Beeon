@@ -4,24 +4,46 @@ import { useState } from "react";
 import { servicos } from "@/lib/content";
 import RevealOnScroll from "@/components/motion/RevealOnScroll";
 
+const DESLOCAMENTO_POR_ITEM = 1.4; // rem — cada vídeo aparece numa altura levemente diferente
+
 /**
  * Vitrine de serviços: hover/foco troca o vídeo e o resumo ao lado.
- * Animação especificada com referência ao After Effects: o vídeo que
- * entra só sobe em Y (sem fade, sem opacidade) — sobe de baixo do
- * quadro até a posição final. O vídeo que acabou de sair não
- * desaparece: só encolhe (scale), anchor point centralizado embaixo,
- * diminuindo de tamanho enquanto o novo sobe por cima dele. Só o
- * ativo e o anterior-imediato participam disso — os outros dois
- * ficam sempre estacionados embaixo (translateY 100%), prontos pra
- * subir na próxima vez que forem escolhidos, então a subida acontece
- * toda vez, não só na primeira.
+ * O vídeo que entra só sobe em Y (sem fade, sem opacidade). O vídeo
+ * que acabou de sair não desaparece: só encolhe (scale), anchor point
+ * centralizado embaixo. Só o ativo e o anterior-imediato participam
+ * disso — os outros dois ficam sempre estacionados embaixo
+ * (translateY 100%, scale 1), prontos pra subir puro em Y na próxima
+ * vez que forem escolhidos.
+ *
+ * Caso especial: voltar direto pro item que virou "anterior" (ainda
+ * encolhido no lugar, scale 0.86, translateY 0) não teria pra onde
+ * subir — ele só cresceria de volta, sem o efeito de subida. Nesse
+ * caso, `ativar` primeiro estaciona o item embaixo sem transição
+ * (dois requestAnimationFrame pra garantir que o navegador aplique o
+ * estado intermediário antes da próxima mudança) e só então ativa com
+ * a transição normal, garantindo que a subida em Y aconteça sempre.
  */
 export default function Showcase() {
   const [active, setActive] = useState(0);
   const [anterior, setAnterior] = useState<number | null>(null);
+  const [semTransicao, setSemTransicao] = useState<number | null>(null);
 
   function ativar(i: number) {
     if (i === active) return;
+
+    if (i === anterior) {
+      setSemTransicao(i);
+      setAnterior(null);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setSemTransicao(null);
+          setAnterior(active);
+          setActive(i);
+        });
+      });
+      return;
+    }
+
     setAnterior(active);
     setActive(i);
   }
@@ -31,7 +53,10 @@ export default function Showcase() {
       <div className="site-grid items-start">
         {/* vídeo — entra subindo em Y, o anterior só encolhe */}
         <div className="col-span-12 lg:col-span-5 order-2 lg:order-1 mt-[4rem] lg:mt-0">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem] bg-ground">
+          <div
+            className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem] bg-paper transition-[margin-top] duration-700"
+            style={{ marginTop: `${active * DESLOCAMENTO_POR_ITEM}rem`, transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+          >
             {servicos.map((s, i) => {
               const ehAtivo = i === active;
               const ehAnterior = i === anterior;
@@ -45,7 +70,7 @@ export default function Showcase() {
                     })`,
                     transformOrigin: "50% 100%",
                     zIndex: ehAtivo ? 2 : ehAnterior ? 1 : 0,
-                    transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                    transition: i === semTransicao ? "none" : "transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                 >
                   <video
