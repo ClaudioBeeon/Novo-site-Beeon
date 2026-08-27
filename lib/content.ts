@@ -18,9 +18,9 @@ export const site = {
 export const nav = [
   { label: "Início", href: "#top" },
   { label: "Sobre nós", href: "#agencia" },
-  { label: "Cases", href: "#cases" },
+  { label: "Cases", href: "/cases" },
   { label: "Serviços", href: "#servicos" },
-  { label: "Blog", href: "#blog" },
+  { label: "Blog", href: "/blog" },
   { label: "Contato", href: "#contato" },
 ];
 
@@ -182,8 +182,8 @@ export const footer = {
   sitemap: [
     { label: "A Agência", href: "#agencia" },
     { label: "Serviços", href: "#servicos" },
-    { label: "Cases", href: "#cases" },
-    { label: "Blog", href: "#blog" },
+    { label: "Cases", href: "/cases" },
+    { label: "Blog", href: "/blog" },
     { label: "Contato", href: "#contato" },
   ],
   socials: [
