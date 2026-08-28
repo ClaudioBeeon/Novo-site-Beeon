@@ -63,35 +63,46 @@ export default function Premios() {
               return (
                 <div
                   key={item.titulo}
-                  className="absolute flex items-center justify-center text-center"
+                  className="absolute"
                   style={{
                     width: "38%",
                     aspectRatio: "1 / 1",
                     top: POSICOES[i].top,
                     left: POSICOES[i].left,
-                    clipPath: "url(#hexround)",
-                    background: ativoAtual ? "var(--paper)" : "var(--ground)",
-                    boxShadow: ativoAtual ? "0 1.8rem 3.6rem rgba(10,10,10,.16)" : "none",
                     transform: ativoAtual ? "scale(1.16)" : "scale(1)",
                     zIndex: ativoAtual ? 2 : 1,
-                    padding: "1.6rem",
-                    transition:
-                      "transform 0.7s cubic-bezier(0.16,1,0.3,1), background 0.7s ease, box-shadow 0.7s ease",
+                    transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
                   }}
                 >
-                  <div>
-                    <span
-                      className="font-display font-extrabold text-ink block"
-                      style={{ fontSize: item.tamanho, lineHeight: 1.1 }}
-                    >
-                      {item.titulo}
-                    </span>
-                    <p
-                      className="font-mono text-[0.78rem] text-muted mt-[0.7rem] mx-auto leading-[1.4]"
-                      style={{ maxWidth: "11.5rem" }}
-                    >
-                      {item.desc}
-                    </p>
+                  {/* camada separada: essa cuida só do recorte hexagonal.
+                      clip-path via SVG + transform no MESMO elemento falha
+                      em alguns navegadores (o quadrado vira retângulo reto
+                      quando escala) — por isso a transformação fica no
+                      wrapper de fora e o clip-path fica aqui, sempre parado. */}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center text-center"
+                    style={{
+                      clipPath: "url(#hexround)",
+                      background: ativoAtual ? "var(--paper)" : "var(--ground)",
+                      boxShadow: ativoAtual ? "0 1.8rem 3.6rem rgba(10,10,10,.16)" : "none",
+                      padding: "1.6rem",
+                      transition: "background 0.7s ease, box-shadow 0.7s ease",
+                    }}
+                  >
+                    <div>
+                      <span
+                        className="font-display font-extrabold text-ink block"
+                        style={{ fontSize: item.tamanho, lineHeight: 1.1 }}
+                      >
+                        {item.titulo}
+                      </span>
+                      <p
+                        className="font-mono text-[0.78rem] text-muted mt-[0.7rem] mx-auto leading-[1.4]"
+                        style={{ maxWidth: "11.5rem" }}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
