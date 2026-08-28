@@ -28,7 +28,7 @@ export default function Cases() {
       <div className="mb-[7rem] flex items-end justify-between gap-[2rem]">
         <RevealOnScroll>
           <h2 className="font-display font-semibold text-[clamp(2.4rem,3.2vw,3.4rem)] leading-[1.15] tracking-[-0.02em] text-balance max-w-[26ch]">
-            <span className="text-azul">03 —</span> Resultado real, para clientes reais.
+            <span className="text-azul">04 —</span> Resultado real, para clientes reais.
           </h2>
         </RevealOnScroll>
 

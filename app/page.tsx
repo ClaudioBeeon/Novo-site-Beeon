@@ -2,6 +2,7 @@ import Header from "@/components/sections/Header";
 import Hero from "@/components/sections/Hero";
 import Showcase from "@/components/sections/Showcase";
 import Stats from "@/components/sections/Stats";
+import Premios from "@/components/sections/Premios";
 import Cases from "@/components/sections/Cases";
 import Method from "@/components/sections/Method";
 import Testimonials from "@/components/sections/Testimonials";
@@ -17,6 +18,7 @@ export default function Home() {
         <Hero />
         <Showcase />
         <Stats />
+        <Premios />
         <Cases />
         <Method />
         <Testimonials />

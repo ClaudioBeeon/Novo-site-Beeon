@@ -31,8 +31,22 @@ export const hero = {
   scrollLabel: "Role para conhecer",
 };
 
+export const premios = {
+  eyebrow: "03 — Prêmios & Reconhecimento",
+  titulo: "Reconhecimento de mercado e resultado que o cliente sente no dia a dia — não é relatório de vaidade, é receita.",
+  destaque: {
+    titulo: "Prêmio Limitless",
+    desc: "RD Station reconheceu a Beeon entre as agências que mais entregam resultado real pra seus clientes.",
+  },
+  cards: [
+    { valor: "+6M", desc: "pessoas impactadas por mês" },
+    { valor: "+40", desc: "cidades atendidas" },
+    { valor: "+1.000", desc: "anúncios por mês" },
+  ],
+};
+
 export const diagnostico = {
-  eyebrow: "07 — Diagnóstico gratuito",
+  eyebrow: "08 — Diagnóstico gratuito",
   titulo: "Vamos achar onde seu marketing está perdendo receita.",
   subtitulo:
     "15 minutos de conversa, sem compromisso. Nossa equipe analisa seu cenário atual e te devolve um plano — não um pitch de venda.",
@@ -112,7 +126,7 @@ export const cases = [
 ] as const;
 
 export const metodo = {
-  titulo: "04 — Como a Beeon trabalha",
+  titulo: "05 — Como a Beeon trabalha",
   paragrafos: [
     "Cada estratégia nasce de um diagnóstico real — não de um modelo pronto aplicado a qualquer cliente. Entendemos o negócio, o mercado e o ponto onde a receita está travada antes de propor qualquer ação.",
     "Colocamos tráfego pago, inbound e SEO para trabalhar juntos, com metas de negócio acompanhadas semana a semana, não relatório de vaidade.",

@@ -37,7 +37,7 @@ export default function Blog() {
         <div className="mb-[7rem] flex flex-col sm:flex-row sm:items-end justify-between gap-[2.4rem]">
           <RevealOnScroll>
             <p className="font-mono text-[1.2rem] tracking-[0.1em] text-sinal uppercase mb-[1.2rem]">
-              06 — Blog
+              07 — Blog
             </p>
             <h2 className="font-display font-semibold text-[clamp(2.6rem,3.8vw,4rem)] leading-[1.05] tracking-[-0.02em]">
               Últimos posts
