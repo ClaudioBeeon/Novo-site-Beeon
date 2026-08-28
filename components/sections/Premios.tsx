@@ -65,43 +65,57 @@ export default function Premios() {
                   key={item.titulo}
                   className="absolute"
                   style={{
-                    width: "38%",
+                    // Cresce mudando width/height de verdade, nunca transform:
+                    // clip-path + transform (mesmo em elemento separado, se
+                    // um ancestral tem transform) é instável em vários
+                    // navegadores — já vi isso quebrar de duas formas
+                    // diferentes (virar quadrado, depois ficar invisível).
+                    // width/height são propriedades de layout normais, sem
+                    // esse problema.
+                    width: ativoAtual ? "44%" : "38%",
                     aspectRatio: "1 / 1",
-                    top: POSICOES[i].top,
-                    left: POSICOES[i].left,
-                    transform: ativoAtual ? "scale(1.16)" : "scale(1)",
+                    top: ativoAtual ? `calc(${POSICOES[i].top} - 3%)` : POSICOES[i].top,
+                    left: ativoAtual ? `calc(${POSICOES[i].left} - 3%)` : POSICOES[i].left,
                     zIndex: ativoAtual ? 2 : 1,
-                    transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
+                    transition: "width 0.7s cubic-bezier(0.16,1,0.3,1), top 0.7s cubic-bezier(0.16,1,0.3,1), left 0.7s cubic-bezier(0.16,1,0.3,1)",
                   }}
                 >
-                  {/* camada separada: essa cuida só do recorte hexagonal.
-                      clip-path via SVG + transform no MESMO elemento falha
-                      em alguns navegadores (o quadrado vira retângulo reto
-                      quando escala) — por isso a transformação fica no
-                      wrapper de fora e o clip-path fica aqui, sempre parado. */}
+                  {/* camada separada: essa cuida só do recorte hexagonal. */}
                   <div
-                    className="absolute inset-0 flex items-center justify-center text-center"
+                    className="absolute inset-0"
                     style={{
                       clipPath: "url(#hexround)",
-                      background: ativoAtual ? "var(--paper)" : "var(--ground)",
                       boxShadow: ativoAtual ? "0 1.8rem 3.6rem rgba(10,10,10,.16)" : "none",
-                      padding: "1.6rem",
-                      transition: "background 0.7s ease, box-shadow 0.7s ease",
+                      transition: "box-shadow 0.7s ease",
                     }}
                   >
-                    <div>
-                      <span
-                        className="font-display font-extrabold text-ink block"
-                        style={{ fontSize: item.tamanho, lineHeight: 1.1 }}
-                      >
-                        {item.titulo}
-                      </span>
-                      <p
-                        className="font-mono text-[0.78rem] text-muted mt-[0.7rem] mx-auto leading-[1.4]"
-                        style={{ maxWidth: "11.5rem" }}
-                      >
-                        {item.desc}
-                      </p>
+                    <div className="absolute inset-0" style={{ background: "var(--ground)" }} />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: "var(--paper)",
+                        opacity: ativoAtual ? 1 : 0,
+                        transition: "opacity 0.7s ease",
+                      }}
+                    />
+                    <div
+                      className="absolute inset-0 flex items-center justify-center text-center"
+                      style={{ padding: "1.6rem" }}
+                    >
+                      <div>
+                        <span
+                          className="font-display font-extrabold text-ink block"
+                          style={{ fontSize: item.tamanho, lineHeight: 1.1 }}
+                        >
+                          {item.titulo}
+                        </span>
+                        <p
+                          className="font-mono text-[0.78rem] text-muted mt-[0.7rem] mx-auto leading-[1.4]"
+                          style={{ maxWidth: "11.5rem" }}
+                        >
+                          {item.desc}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
