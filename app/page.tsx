@@ -1,5 +1,6 @@
 import Header from "@/components/sections/Header";
 import Hero from "@/components/sections/Hero";
+import Clientes from "@/components/sections/Clientes";
 import Showcase from "@/components/sections/Showcase";
 import Stats from "@/components/sections/Stats";
 import Premios from "@/components/sections/Premios";
@@ -16,6 +17,7 @@ export default function Home() {
       <Header />
       <main id="top">
         <Hero />
+        <Clientes />
         <Showcase />
         <Stats />
         <Premios />

@@ -1,0 +1,50 @@
+# Claude Code configuration (private)
+.claude/
+.claude
+CLAUDE.md
+Claude.md
+
+# Output artifacts
+artifacts/
+Artifacts/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.env
+.venv
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Packaged skill (rebuild from source)
+*.skill
